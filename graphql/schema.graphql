@@ -1,0 +1,121 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Indicates what fields are available at the top level of a query operation."
+type Query @guard(with:["api"]) {
+    "Find a single user by an identifying attribute."
+    user(
+      "Search by primary key."
+      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"]),
+
+      "Search by email address."
+      email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
+    ): User @find
+
+    "List multiple users."
+    # users(
+    #   "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
+    #   name: String @where(operator: "like")
+    # ): [User!]! @paginate(defaultCount: 10)
+    users: [User!]! @all
+    # usercars(
+    #   # find cars belonging to specific user
+    #   id: ID @eq): [Cars!]! @find
+
+    car(
+      "Search by primary key."
+      id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+
+      "Search by email address."
+      email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])): Cars @find
+    cars: [Cars!]! @all
+    cartype("Search by primary key."
+      id: ID @eq @rules(apply: ["prohibits:name", "required_without:name"])
+
+      "Search by email address."
+      name: String @eq @rules(apply: ["prohibits:id", "required_without:id", "name"])): CarTypes @find
+    cartypes: [CarTypes!]! @all
+}
+
+"Account of a person who utilizes this application."
+type User {
+    "Unique primary key."
+    id: ID!
+
+    "Non-unique name."
+    name: String!
+
+    "Unique email address."
+    email: String!
+
+    "When the email was verified."
+    email_verified_at: DateTime
+
+    "When the account was created."
+    created_at: DateTime!
+
+    "When the account was last updated."
+    updated_at: DateTime!
+    cars: [Cars!]! @hasMany
+}
+
+type CarTypes {
+  id: ID!
+  name: String!
+  cars: [Cars!]! @hasMany
+  created_at: DateTime!
+  updated_at: DateTime!
+
+}
+
+type Cars {
+  id: ID!
+  reg_no: String!
+  year_of_manufacture: String!
+  tonnage: Float!
+  users: User @belongsTo
+  car_types: CarTypes @belongsTo
+  created_at: DateTime!
+  updated_at: DateTime!
+
+}
+
+input CarOwnerInput {
+  user_id: ID
+  create: RegisterInput
+}
+
+input CarTypeInput {
+  car_types_id: ID
+}
+
+
+input CreateNewCarInput {
+  reg_no: String!
+  year_of_manufacture: String!
+  tonnage: Float!
+  car_types: CarTypeInput! @spread
+  users: CarOwnerInput! @spread
+}
+
+input UpdateCarInput {
+  id: ID!
+  tonnage: Float!
+  car_types: CarTypeInput! @spread
+  users: CarOwnerInput! @spread
+}
+
+type Mutation {
+    login(input: LoginInput @spread): AuthPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Login@resolve")
+    refreshToken(input: RefreshTokenInput @spread): RefreshTokenPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\RefreshToken@resolve")
+    logout: LogoutResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Logout@resolve")
+    forgotPassword(input: ForgotPasswordInput! @spread): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ForgotPassword@resolve")
+    updateForgottenPassword(input: NewPasswordWithCodeInput @spread): ForgotPasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ResetPassword@resolve")
+    register(input: RegisterInput @spread): RegisterResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Register@resolve")
+    socialLogin(input: SocialLoginInput! @spread): AuthPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\SocialLogin@resolve")
+    verifyEmail(input: VerifyEmailInput! @spread): AuthPayload! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\VerifyEmail@resolve")
+    updatePassword(input: UpdatePassword! @spread): UpdatePasswordResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\UpdatePassword@resolve") @guard(with: ["api"])
+    carRegister(input: CreateNewCarInput! @spread): Cars @create @guard(with: ["api"])
+    updateCarDetails(input: UpdateCarInput! @spread): Cars @update @guard(with: ["api"])
+}
+
