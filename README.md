@@ -173,7 +173,8 @@ mutation {
 
   }
 
-}```
+}
+```
 
 # 5. Register a car
 ```
@@ -203,7 +204,8 @@ mutation {
     }
   }
 
-}```
+}
+```
 
 # 6. Logout
 ```
