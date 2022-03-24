@@ -69,15 +69,19 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 Outlined below is how to run all the necessary endpoints
 To begin go to this url:
 
-Then register a user with your chosen credentials or use this test credentials to login: username: "kramerc@example.com" password: "testpassword"
-
+Then register a user with your chosen credentials or use this test credentials to login:
+```
+username: "kramerc@example.com"
+password: "testpassword"
+```
 All available queries require authentication and so do the updateCarDetails and carRegister mutations. These means adding the access token received on registration or login to the query as a http header as below:
-
+```
 {
   "Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiZGMwZjk3MjBlZGFhZTVlNGY2YzcxMzIxMzEyYTY0OWMxMzAyZmE4MDJmMDA4YmYyZTM3ZWMyNTIxOTdiMjUxODMxMjAyZjUxOTFhNzgzN2QiLCJpYXQiOjE2NDgwNDA0NjcuODE1MjI0LCJuYmYiOjE2NDgwNDA0NjcuODE1MjQ0LCJleHAiOjE2Nzk1NzY0NjcuNTYxNDU1LCJzdWIiOiIyMSIsInNjb3BlcyI6W119.dyF92U_Qok99px8RyF4xuoMxj58auaBLvKHy2-8oEcua4IkBq7ALKRxuPzmlK88bkojOPBgofF_9vdTC9GQ_Bm4gWw1r_PZGpwKYTPDvVSGhnBeIB3JqUgrurTUAiujRUrEOJgjoYTYZUim362Nr011f533AtiWwLlYdCrHJIzozUh5SK82ukKPKF5NbtYqg-kIqWGDZ3JEaaU48XL6HJslWSjbY0WkKz5QBSCP-ro3QS-77KsviJwc8W7ixsXJCpiTZFZZkiQKksKQGqMuYrxGCmGzUy4uoo-7aWNvoWACnurOmT-InNEHrUE9n2rA20TiggkyeeodLVzO8dZOATqg9sRC-ECbPoAc-pDopnjQyEIovMqEJEZg78Sx_W-FIbdQR1rhI2HSanJW5lxcXQjecl0AvzYoPguDun2ej6YZftdcA_E-rbM3Y8rSIkN4-287NYAkJCaKLlDt2ePlqL8Bpu563DLctRahe3Y5Jl3VqDAj4s-v86i9biYcn4nmgld8IYrscoXgksCDgTK_xtVUksW6tDfjKOBpcjsdOqN300E_KYV6ChZOGyJPWczfbxBjluj2rVEMmLQbxExQY_ANlZpbHm7PNnslDmsZ5Xy4dZhPC0CUSU8JsSgkiH4BbhmKtV3rL5vcXoLxHS3-tR8vDuxHJ3LMRVsRNTd_bSh4"
 }
-
-1. Register a user
+```
+# 1. Register a user
+```
 mutation {
   register(input: {
     name: "Elaine Benes"
@@ -99,8 +103,9 @@ mutation {
     status
   }
 }
-
-2. Login
+```
+# 2. Login
+```
 mutation {
   login(input: {
     username: "benes21@example.com"
@@ -118,8 +123,9 @@ mutation {
 
   }
 }
-
-3. List cars belonging to a specific user:
+```
+# 3. List cars belonging to a specific user:
+```
 query {
   user(id:19){
     name
@@ -134,8 +140,9 @@ query {
     }
   }
 }
-
-4. Update Car Details
+```
+# 4. Update Car Details
+```
 mutation {
   updateCarDetails(input: {
     id: 2
@@ -166,10 +173,10 @@ mutation {
 
   }
 
-}
+}```
 
-5. Register a car
-
+# 5. Register a car
+```
 mutation {
   carRegister(input:{
     reg_no: "yk9w78h"
@@ -196,12 +203,14 @@ mutation {
     }
   }
 
-}
+}```
 
-6. Logout
+# 6. Logout
+```
 mutation {
   logout{
     status
     message
   }
 }
+```
